@@ -161,6 +161,7 @@ Options:
 	-seed SEED	Sets Random Number Generator's seed to SEED.  Default seed is random
 	-out NAME	Sets output file prefix to NAME, default is seed number		
 	-interactive	Starts CLI maze game. Does not save to file	
+	-tail	if set, tail is drawn
 	-block	Print maze using Unicode block characters, only works with interactive mode	
 	-color	Print maze using ANSI style coloring, only works with interactive mode	
 	-solve	Displays the solution to the maze in real-time, only works with interactive mode
@@ -191,7 +192,7 @@ Example:
 		'empty_color' : COLOR_DEFAULT,
 		'wall_color' : COLOR_BLUE,
 		'head_color' : COLOR_RED,
-		'tail_color' : COLOR_CYAN,
+		'tail_color' : COLOR_BLACK, #COLOR_CYAN,
 		'start_bg_color' : COLOR_BG_YELLOW,
 		'end_bg_color' : COLOR_BG_YELLOW,
 		# if color, full block for player too
@@ -242,6 +243,9 @@ Example:
 			i+=1 # eat next arg
 		elif option == '-interactive':
 			interactive = True
+		elif option == '-tail':
+			color_symbols['tail_color']=COLOR_CYAN
+			symbols.update(color_symbols)
 		elif option == '-block':
 			symbols.update(block_symbols)
 			is_block = True
