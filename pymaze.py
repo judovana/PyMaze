@@ -253,7 +253,6 @@ Example:
 			symbols.update(color_symbols)
 			is_color = True
 		elif option == '-solve':
-
 			interactive = True
 			is_solve = True
 		elif option == '-help':
@@ -262,33 +261,50 @@ Example:
 		else:
 			error('Invalid option: ' + option )	
 			
-	#create the maze
-	maze_obj = maze.Maze(width, height, seed, symbols)
-	# activate a repl-like command interpreter to try to solve the maze 
-	if interactive:
-		if output_to_file:		
-			error('Error: Output mode NOT compatible with interactive mode')	
-		if is_solve:
-			solve_maze(maze_obj)
-		else:
-			play_maze(maze_obj)
-	else:
-		# if using block symbols and printing to file print error
-		if output_to_file:
-			if is_color:		
-				error('Error: Ansi Color mode is NOT compatible with output mode')	
-			elif is_block:		
-				error('Error: Unicode Block mode is NOT compatible with output mode')	
-			elif is_solve:		
-				error('Error: Solution is NOT compatible with output mode')
+	while True:
+		exitus = False
+		#create the maze
+		maze_obj = maze.Maze(width, height, seed, symbols)
+		# activate a repl-like command interpreter to try to solve the maze 
+		if interactive:
+			if output_to_file:		
+				error('Error: Output mode NOT compatible with interactive mode')	
+			if is_solve:
+				solve_maze(maze_obj)
 			else:
-				save_maze(maze_obj, out_filename)
+				play_maze(maze_obj)
+				os.system('clear' if os.name!='nt' else 'cls')	
+				print(r'''
+Ahoj Kacenko! Zahrala sis? Pro dalsi hru stiskni cokoliv, pro ukonceni X
+				''')
+				move = ord(getchar())
+				quit_key = lambda key: key == ord('x')
+				if quit_key(move):
+					exitus = True
+					print('papa!')
+				else:
+					maze_obj.kill_timer()
+
 		else:
-			if is_solve:		
-				error('Error: Solution must be invoke in interactive mode')
-			# print to standard output
-			os.system('clear' if os.name!='nt' else 'cls')	
-			print(maze_obj.to_str())
+			# if using block symbols and printing to file print error
+			if output_to_file:
+				if is_color:		
+					error('Error: Ansi Color mode is NOT compatible with output mode')	
+				elif is_block:		
+					error('Error: Unicode Block mode is NOT compatible with output mode')	
+				elif is_solve:		
+					error('Error: Solution is NOT compatible with output mode')
+				else:
+					save_maze(maze_obj, out_filename)
+			else:
+				if is_solve:		
+					error('Error: Solution must be invoke in interactive mode')
+				# print to standard output
+				os.system('clear' if os.name!='nt' else 'cls')	
+				print(maze_obj.to_str())
+		if exitus:
+			break
+	
 
 # After all definitions, start main
 if __name__ == '__main__':
